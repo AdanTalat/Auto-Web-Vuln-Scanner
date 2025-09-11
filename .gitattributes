@@ -1,0 +1,2 @@
+BOT/Model/**/* filter=lfs diff=lfs merge=lfs -text
+BOT/Data/**/*.csv filter=lfs diff=lfs merge=lfs -text

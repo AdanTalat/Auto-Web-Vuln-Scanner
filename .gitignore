@@ -1,0 +1,19 @@
+# Python virtual environment
+.venv/
+venv/
+ENV/
+
+# Python bytecode and cache
+__pycache__/
+*.pyc
+
+# IDE and editor directories
+.idea/
+.vscode/
+
+# Log files
+logs/
+*.log
+
+# User-generated results (optional, but good practice)
+scan_results.csv
