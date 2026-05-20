@@ -169,8 +169,7 @@ prediction = "Malicious" if probs >= BEST_THRESHOLD else "Benign"
 
 ---
 
-## License & credits
+## Credits
 
-* **License:** Add your preferred license (MIT/Apache-2.0).
 * **Credits:** Hugging Face Transformers, Datasets, PyTorch, scikit-learn, OWASP guidelines.
 
