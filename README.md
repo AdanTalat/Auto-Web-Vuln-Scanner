@@ -135,14 +135,6 @@ python trainer.py
 * Detect latest checkpoint in `./Model/results` and resume automatically if present,
 * Save final model to `./Model/distilbert_web_scanner`.
 
-**Resume manually** (if required):
-
-* If checkpoint folders are in `BOT/Model/results/checkpoint-XXXX`, `trainer.py` will auto-detect.
-* To resume explicitly:
-
-```python
-trainer.train(resume_from_checkpoint="BOT/Model/results/checkpoint-2500")
-```
 
 ---
 
@@ -170,59 +162,6 @@ probs = torch.softmax(outputs.logits, dim=1)[:,1].item()
 prediction = "Malicious" if probs >= BEST_THRESHOLD else "Benign"
 ```
 
----
-
-## Important scripts explained
-
-* **`trainer.py`** – Fine-tune DistilBERT (Hugging Face Trainer). Handles tokenization, checkpointing, resuming, saving final model.
-* **`Scanner.py`** – Interactive scanner. Injects payloads, sends HTTP requests (GET), classifies either payload or response text, logs results.
-* **`tuning.py`** – Evaluate model on held-out test set, compute precision-recall curve and best decision threshold.
-* **`requirements.txt`** – Project dependencies.
-
----
-
-## Tips: checkpoints, batching, token limits
-
-* **Checkpoints**: `save_steps=500` means a checkpoint is saved after every 500 steps.
-  With `per_device_train_batch_size=8`, each step processes 8 requests.
-  So `checkpoint-500` = 500 × 8 = **4,000 requests seen**.
-
-* **Steps per epoch** = `ceil(num_train_examples / batch_size)`.
-  Example: 40,104 examples / 8 = 5,013 steps per epoch (so checkpoint-3000 means model has processed 24k requests).
-
-* **Token limit**: DistilBERT max sequence length = **512 tokens**.
-
-  * For inputs longer than 512 tokens, **truncate** or **split into chunks**.
-  * For shorter inputs, use **padding** to make batch sizes uniform.
-
-* **pin\_memory**: use in DataLoader when training on GPU to speed up CPU→GPU memory transfer. No benefit on CPU-only runs.
-
----
-
-## Speed & deployment options
-
-* **Use TinyBERT / MobileBERT** (huggingface hosts pretrained variants) for faster training and inference with minimal code changes:
-
-  * Replace `model_name = "distilbert-base-uncased"` with a TinyBERT model id like `huawei-noah/TinyBERT_General_4L_312D`.
-* **Quantization (post-training)**: After training, quantize model (INT8) for smaller size and faster inference (especially on CPU).
-
-  * Tools: `torch.quantization`, `optimum`, or `onnxruntime` with INT8.
-  * Example (post-training dynamic quantization):
-
-    ```python
-    import torch
-    from transformers import AutoModelForSequenceClassification
-    model = AutoModelForSequenceClassification.from_pretrained("BOT/Model/distilbert_web_scanner")
-    quantized = torch.quantization.quantize_dynamic(model, {torch.nn.Linear}, dtype=torch.qint8)
-    quantized.save_pretrained("BOT/Model/distilbert_web_scanner_int8")
-    ```
-* **Deployment ideas**:
-
-  * Wrap `Scanner.py` logic in a Flask/FastAPI service to accept requests and return predictions.
-  * Add rate limiting, request queues, and logging for production use.
-  * Respect legal constraints — only test sites you own or have explicit permission to test.
-
----
 
 ## Safety & legal disclaimer
 
@@ -235,21 +174,3 @@ prediction = "Malicious" if probs >= BEST_THRESHOLD else "Benign"
 * **License:** Add your preferred license (MIT/Apache-2.0).
 * **Credits:** Hugging Face Transformers, Datasets, PyTorch, scikit-learn, OWASP guidelines.
 
----
-
-## FAQ / Troubleshooting
-
-* **Model says everything is malicious** → Check dataset balance, label mapping (ensure `1 = malicious` in training and inference), and run `tuning.py` to pick a threshold.
-* **No checkpoints found on resume** → Ensure `training_args.output_dir` equals the folder where checkpoints are saved (`./Model/results` by default).
-* **403 responses during scanning** → The site is blocking suspicious requests (WAF). A `403` means requests were blocked — not necessarily that the site is vulnerable.
-* **Want to classify real responses instead of payloads?** Train the model on response text (HTML/JSON) rather than payload strings and update `Scanner.py` accordingly.
-
----
-
-If you want, I can:
-
-* Create a **short QuickStart.md** with the minimal commands, or
-* Auto-generate a **GitHub Actions** workflow to run tests (no training in CI), or
-* Produce a ready-to-use **Flask** wrapper for the scanner for demo purposes.
-
-Which of these would you like next?
