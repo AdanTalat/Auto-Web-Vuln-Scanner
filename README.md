@@ -6,21 +6,21 @@ This README explains what the project contains, how to train and use the model, 
 
 ---
 
-## Table of contents
+## Table of Contents
 
-* [Project overview](#project-overview)
-* [Folder structure](#folder-structure)
-* [Requirements](#requirements)
-* [Quick start](#quick-start)
-
-  * [Run scanner (inference)](#run-scanner-inference)
-  * [Train / resume training](#train--resume-training)
-  * [Evaluate & tune threshold](#evaluate--tune-threshold)
-* [Important scripts explained](#important-scripts-explained)
-* [Tips: checkpoints, batching, token limits](#tips-checkpoints-batching-token-limits)
-* [Speed & deployment options](#speed--deployment-options)
-* [Safety & legal disclaimer](#safety--legal-disclaimer)
-* [License & credits](#license--credits)
+- [Project Overview](#project-overview)
+- [Folder Structure](#folder-structure)
+- [Requirements](#requirements)
+- [Quick Start](#quick-start)
+  - [Run Scanner (Inference)](#run-scanner-inference)
+  - [Train / Resume Training](#train--resume-training)
+  - [Evaluate & Tune Threshold](#evaluate--tune-threshold)
+- [Important Scripts Explained](#important-scripts-explained)
+- [Tips: Checkpoints, Batching, Token Limits](#tips-checkpoints-batching-token-limits)
+- [Speed & Deployment Options](#speed--deployment-options)
+- [Safety & Legal Disclaimer](#safety--legal-disclaimer)
+- [License](#license)
+- [Credits](#credits)
 
 ---
 
@@ -168,6 +168,27 @@ prediction = "Malicious" if probs >= BEST_THRESHOLD else "Benign"
 **Important:** This tool actively sends crafted payloads to web servers. You must **only** test systems you own or have explicit written permission to scan. Unauthorized testing is illegal and unethical. Use this project for education, research and authorized assessments only.
 
 ---
+
+## License
+
+This project is licensed under the MIT License.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 
 ## Credits
 
